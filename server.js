@@ -32,8 +32,8 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client) {
     });
   })
 
-
-  server.get('/', (req, res) => {
+  // Get all
+  server.get('/countries', (req, res) => {
     countriesCollection.find().toArray(function(err, allCountries){
       if(err){
         console.error(err);
@@ -43,6 +43,18 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client) {
       res.send(allCountries);
     })
   });
+
+  // Delete all
+  server.delete('/countries', (req, res) => {
+    countriesCollection.deleteMany({}, function(err, result) {
+      if(err){
+        console.error(err)
+        res.status(500);
+        res.send();
+      }
+      res.send();
+    })
+  })
 
   server.listen(3000, function () {
     console.log(`Example app listening on port ${ this.address().port }`);

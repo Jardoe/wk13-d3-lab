@@ -1,5 +1,6 @@
 const DBRequest = function (url) {
   this.url = url;
+  countryUrl = `${this.url}/countries`
 }
 
 DBRequest.prototype.addCountry = function (onComplete, payload) {
@@ -19,14 +20,25 @@ DBRequest.prototype.addCountry = function (onComplete, payload) {
 
 DBRequest.prototype.getSavedCountries = function (onComplete) {
   const request = new XMLHttpRequest();
-  request.open('GET', this.url);
+  request.open('GET', countryUrl);
   request.addEventListener('load', function () {
     if(request.status !== 200) return;
-    console.log(request);
+
     const response = JSON.parse(request.responseText);
+    console.log(response);
     onComplete(response);
   })
   request.send();
 }
+
+DBRequest.prototype.deleteAll = function (onComplete) {
+  const request = new XMLHttpRequest();
+  request.open('DELETE', countryUrl);
+  request.addEventListener('load', function () {
+    if(request.status !== 200) return;
+    onComplete();
+  })
+  request.send();
+};
 
 module.exports = DBRequest;

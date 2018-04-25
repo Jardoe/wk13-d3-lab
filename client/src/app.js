@@ -1,9 +1,9 @@
-const APIRequest = require('./services/apiRequest.js');
+const APIHandler = require('./services/apiHandler.js');
 const DropDownView = require('./views/dropDownView.js');
 const DBRequest = require('./services/dbRequest.js');
 const BucketView = require('./views/bucketView.js');
 
-const apiRequest = new APIRequest("https://restcountries.eu/rest/v2/all")
+const apiHandler = new APIHandler("https://restcountries.eu/rest/v2/all")
 const dbRequest = new DBRequest("http://localhost:3000")
 const bucketView = new BucketView();
 
@@ -20,8 +20,8 @@ const onSavedCountriesComplete = function (savedCountries) {
   });
 };
 
-const onCountryComplete = function () {
-  // render countries in bucket list;
+const onCountryComplete = function (addedCountry) {
+  bucketView.addCountry(addedCountry);
 }
 
 const onCountrySelected = function (event){
@@ -29,11 +29,23 @@ const onCountrySelected = function (event){
   dbRequest.addCountry(onCountryComplete, selectedCountry);
 }
 
+const onDeleteButtonClicked = function () {
+  dbRequest.deleteAll(deleteAllRequestComplete)
+}
+
+const deleteAllRequestComplete = function (){
+  bucketView.clearAll();
+}
+
 const appStart = function () {
   dbRequest.getSavedCountries(onSavedCountriesComplete);
-  apiRequest.getAPI(getAPIOnComplete);
+  apiHandler.getAPI(getAPIOnComplete);
+
   const dropDownContainer = document.querySelector('#country-select');
   dropDownContainer.addEventListener('change', onCountrySelected)
+
+  const deleteAllButton = document.querySelector('#delete-all');
+  deleteAllButton.addEventListener('click', onDeleteButtonClicked);
 
 };
 

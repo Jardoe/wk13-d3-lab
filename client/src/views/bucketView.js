@@ -8,11 +8,17 @@ BucketView.prototype.addCountry = function (country) {
 };
 
 
-BucketView.prototype.render = function (country) {
+BucketView.prototype.render = function (object) {
   const ul = document.querySelector('#bucket-list');
   const li = document.createElement('li');
-  li.textContent = country.name.
+  li.textContent = object.country
   ul.appendChild(li);
+};
+
+BucketView.prototype.clearAll = function () {
+  this.countries = [];
+  const ul = document.querySelector('#bucket-list');
+  ul.innerHTML = "";
 };
 
 
